@@ -138,7 +138,7 @@ void imprimeSolucaoIterativa(double *x, int n)
     printf("]\n");
 }
 
-//
+// Diferença entre solução obtida e esperada
 
 double norma_diferenca(double *x, double *y, int n)
 {
@@ -153,6 +153,32 @@ double norma_diferenca(double *x, double *y, int n)
     return valor_diff;
 }
 
+double condicionamento(double **A, double *b, double *x_esp, double *x, int n)
+{
+    double prod[n];
+    double vet_diff[n];
+    double res[n];
+    double cond;
+
+    for (int i = 0; i < n; i++)
+    {
+        prod[i] = 0;
+        for (int j = 0; j < n; j++)
+        {
+            prod[i] += A[i][j] * x[j];
+        }
+        vet_diff[i] = x_esp[i] - x[i];
+    }
+
+    // Computando vetor resíduo
+    for (int i = 0; i < n; i++)
+        res[i] = b[i] - prod[i];
+
+    cond = (maximo(b, n) * maximo(vet_diff, n)) / (maximo(res, n) * maximo(x_esp, n));
+
+    return cond;
+}
+
 // Função principal
 
 int main(void)
@@ -165,6 +191,7 @@ int main(void)
     char coeficientes[10], coluna[10];
     // Solução esperada
     double *x_esp;
+    double cond;
 
     // Resolvendo os Sistemas
     for (int p = 0; p < 4; p++)
@@ -214,6 +241,10 @@ int main(void)
         printf("\n");
 
         x = eliminacaoGauss(A, b, dim[p]);
+
+        // condicionamento
+        cond = condicionamento(A, b, x_esp, x, dim[p]);
+        printf("Condidionamento da matriz (Estimativa): %lf.\n", cond);
 
         imprimeSolucaoDireta(x, dim[p]);
         printf("Diferença em norma infinito da solução direta obtida com a solução esperada: %lf.\n", norma_diferenca(x, x_esp, dim[p]));
