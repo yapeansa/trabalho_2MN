@@ -1,4 +1,4 @@
-SRC = main.c matrix.c
+SRC = main.c
 TARGET = main
 CC = gcc
 RM = rm -rf
