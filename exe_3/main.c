@@ -4,6 +4,14 @@
 #include <math.h>
 #define N 17
 
+int min(int a, int b)
+{
+    if (a >= b)
+        return a;
+    else
+        return b;
+}
+
 float *retroSubstitution(float (*A)[N], float *b, int n)
 {
     float *x;
@@ -31,7 +39,7 @@ float *gaussElimination(float (*A)[N], float *b, int n)
     {
         /* Procurando por r tal que |a_{rk}| = max_{i \in [k, n]} |a_{ik}| */
         int r = k;
-        for (int i = k + 1; i < n; i++)
+        for (int i = k + 1; i < min(n, k + 3); i++)
         {
             if (fabs(A[i][k]) > fabs(A[r][k]))
                 r = i;
@@ -40,7 +48,7 @@ float *gaussElimination(float (*A)[N], float *b, int n)
         /* Troca as linhas k e r, se necessário */
         if (r != k)
         {
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < min(n, k + 4); j++)
             {
                 float temp = A[k][j];
                 A[k][j] = A[r][j];
@@ -51,7 +59,7 @@ float *gaussElimination(float (*A)[N], float *b, int n)
             b[r] = temp;
         }
 
-        for (int i = k + 1; i < n; i++) /* Linhas abaixo da k-ésima */
+        for (int i = k + 1; i < min(n, k + 3); i++) /* Linhas abaixo da k-ésima */
         {
             float m = A[i][k] / A[k][k];
             for (int j = k; j < n; j++) /* Colunas */
