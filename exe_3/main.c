@@ -30,6 +30,8 @@ float *retroSubstitution(float (*A)[N], float *b, int n)
     return x;
 }
 
+// Para a adaptação do método, consideramos a banda superior q = 4
+// e a banda inferior como p = 3
 float *gaussElimination(float (*A)[N], float *b, int n)
 {
     float *x;
